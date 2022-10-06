@@ -10,8 +10,8 @@ The other pytket extensions can be found [here](https://github.com/CQCL/pytket-e
 [Pytket](https://cqcl.github.io/tket/pytket/api/index.html) is a python module for interfacing
 with tket, a quantum computing toolkit and optimisation compiler developed by Quantinuum.
 
-`pytket-cirq` is an extension to `pytket` that allows `pytket` circuits to
-be executed on Quantinuum's quantum devices.
+`pytket-cirq` is an extension to `pytket` that allows conversion to and from
+Cirq representations.
 
 ## Getting started
 
@@ -22,8 +22,6 @@ and Windows. To install, run:
 
 This will install `pytket` if it isn't already installed, and add new classes
 and methods into the `pytket.extensions` namespace.
-
-The [example notebooks](https://github.com/CQCL/pytket-cirq/tree/develop/examples) also demonstrate some of the key features of pytket-cirq.
 
 ## Bugs, support and feature requests
 
