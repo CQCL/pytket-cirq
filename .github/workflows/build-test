@@ -8,6 +8,9 @@ set -evu
 # Arguments:
 # - mypy: include mypy check ("mypy" or "nomypy")
 #
+# Environment variables used:
+# - GITHUB_WORKSPACE: workspace directory
+#
 # WARNING: running this locally will delete any local files that
 # aren't strictly part of the git tree, including gitignored files!
 
