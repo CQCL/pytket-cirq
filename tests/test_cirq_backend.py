@@ -34,7 +34,6 @@ from pytket.extensions.cirq.backends.cirq import (
 )
 from pytket.circuit import Circuit, Qubit, Bit  # type: ignore
 from pytket.backends import StatusEnum
-from pytket.backends.backendinfo import BackendInfo
 from pytket.predicates import GateSetPredicate  # type: ignore
 
 
