@@ -1,6 +1,11 @@
 Changelog
 ~~~~~~~~~
 
+0.27.1 (October 2022)
+---------------------
+
+* Fix issue with empty architecture
+
 0.27.0 (October 2022)
 ---------------------
 
