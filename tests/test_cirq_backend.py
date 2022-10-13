@@ -34,7 +34,6 @@ from pytket.extensions.cirq.backends.cirq import (
 )
 from pytket.circuit import Circuit, Qubit, Bit  # type: ignore
 from pytket.backends import StatusEnum
-from pytket.backends.backendinfo import BackendInfo
 from pytket.predicates import GateSetPredicate  # type: ignore
 
 
@@ -370,9 +369,9 @@ def test_invalid_n_shots_in_sim_backends(cirq_backend: _CirqSimBackend) -> None:
         CirqCliffordSimBackend(),
     ],
 )
-def test_backend_info_is_set_and_characterisation_is_none(
+def test_backend_info_and_characterisation_are_none(
     cirq_backend: _CirqBaseBackend,
 ) -> None:
     b = cirq_backend
-    assert isinstance(b.backend_info, BackendInfo)
+    assert b.backend_info is None
     assert b.characterisation is None
