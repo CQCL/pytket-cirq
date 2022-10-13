@@ -27,9 +27,7 @@ from cirq.value import RANDOM_STATE_OR_SEED_LIKE
 from cirq.devices import NOISE_MODEL_LIKE
 from cirq.circuits import Circuit as CirqCircuit
 
-from pytket.architecture import Architecture  # type: ignore
 from pytket.circuit import Circuit, OpType, Qubit  # type: ignore
-from pytket.extensions.cirq._metadata import __extension_version__
 from pytket.transform import Transform  # type: ignore
 from pytket.passes import (  # type: ignore
     BasePass,
@@ -89,13 +87,6 @@ class _CirqBaseBackend(Backend):
             ]
         )
         self._gate_set_predicate = _regular_gate_set_predicate
-        self._backend_info = BackendInfo(
-            type(self).__name__,
-            None,
-            __extension_version__,
-            Architecture([]),
-            self._gate_set_predicate.gate_set,
-        )
 
     def rebase_pass(self) -> BasePass:
         return auto_rebase_pass({OpType.CZ, OpType.PhasedX, OpType.Rz})
@@ -246,8 +237,6 @@ class CirqCliffordSampleBackend(_CirqSampleBackend):
 
         self._gate_set_predicate = _clifford_gate_set_predicate
         self._clifford_only = True
-        # Update the backend info gate set to be the Clifford gates.
-        self._backend_info.gate_set = self._gate_set_predicate.gate_set
 
     def rebase_pass(self) -> BasePass:
         return _partial_clifford_rebase
@@ -471,8 +460,6 @@ class CirqCliffordSimBackend(_CirqSimBackend):
         self._gate_set_predicate = _clifford_gate_set_predicate
         self._supports_state = True
         self._simulator = CliffordSimulator(seed=seed)
-        # Update the backend info gate set to be the Clifford gates.
-        self._backend_info.gate_set = self._gate_set_predicate.gate_set
 
     def rebase_pass(self) -> BasePass:
         return _partial_clifford_rebase

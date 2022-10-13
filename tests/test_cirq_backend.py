@@ -370,9 +370,9 @@ def test_invalid_n_shots_in_sim_backends(cirq_backend: _CirqSimBackend) -> None:
         CirqCliffordSimBackend(),
     ],
 )
-def test_backend_info_is_set_and_characterisation_is_none(
+def test_backend_info_and_characterisation_are_none(
     cirq_backend: _CirqBaseBackend,
 ) -> None:
     b = cirq_backend
-    assert isinstance(b.backend_info, BackendInfo)
-    assert b.characterisation is None
+    assert b.backend_info == None
+    assert b.characterisation == None
