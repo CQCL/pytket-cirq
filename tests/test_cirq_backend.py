@@ -373,5 +373,5 @@ def test_backend_info_and_characterisation_are_none(
     cirq_backend: _CirqBaseBackend,
 ) -> None:
     b = cirq_backend
-    assert b.backend_info == None
-    assert b.characterisation == None
+    assert b.backend_info is None
+    assert b.characterisation is None
