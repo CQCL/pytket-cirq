@@ -1,4 +1,4 @@
-# Copyright 2020-2022 Cambridge Quantum Computing
+# Copyright 2020-2023 Cambridge Quantum Computing
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,16 +44,16 @@ setup(
     packages=find_namespace_packages(include=["pytket.*"]),
     include_package_data=True,
     install_requires=[
-        "pytket ~= 1.9",
+        "pytket ~= 1.16",
         "cirq-core ~= 1.0",
         "cirq-google ~= 1.0",
         "protobuf ~= 3.20, < 4.0",
     ],
     classifiers=[
         "Environment :: Console",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: POSIX :: Linux",
