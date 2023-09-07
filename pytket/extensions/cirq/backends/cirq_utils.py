@@ -20,13 +20,12 @@ from cirq.circuits import Circuit as CirqCircuit
 from cirq.ops import QubitOrder, MeasurementGate, NamedQubit
 from cirq.devices import LineQubit, GridQubit
 from cirq.protocols import is_measurement
-from pytket.circuit import Circuit, Qubit, Bit  # type: ignore
+from pytket.circuit import Circuit, Qubit, Bit
 
 
 def _get_default_uids(
     cirq_circuit: CirqCircuit, tket_circuit: Circuit
 ) -> Tuple[List[Bit], List[Qubit]]:
-
     if len(tket_circuit.qubit_readout) == 0:
         return [], tket_circuit.qubits
     else:

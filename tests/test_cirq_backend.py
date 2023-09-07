@@ -20,7 +20,7 @@ from hypothesis import given, strategies
 import numpy as np
 import pytest
 from _pytest.fixtures import FixtureRequest
-from cirq.contrib.noise_models import DepolarizingNoiseModel  # type: ignore
+from cirq.contrib.noise_models import DepolarizingNoiseModel
 
 from pytket.extensions.cirq.backends.cirq import (
     CirqDensityMatrixSampleBackend,
@@ -32,9 +32,9 @@ from pytket.extensions.cirq.backends.cirq import (
     _CirqSimBackend,
     _CirqBaseBackend,
 )
-from pytket.circuit import Circuit, Qubit, Bit  # type: ignore
+from pytket.circuit import Circuit, Qubit, Bit
 from pytket.backends import StatusEnum
-from pytket.predicates import GateSetPredicate  # type: ignore
+from pytket.predicates import GateSetPredicate
 
 
 @pytest.fixture(
@@ -42,11 +42,11 @@ from pytket.predicates import GateSetPredicate  # type: ignore
 )
 def fixture_qubit_readout_circ(request: FixtureRequest) -> Circuit:
     qubits = []
-    if request.param == "LineQubit":  # type: ignore
+    if request.param == "LineQubit":
         qubits = [Qubit("q", x) for x in range(4)]
-    if request.param == "GridQubit":  # type: ignore
+    if request.param == "GridQubit":
         qubits = [Qubit("g", row=r, col=c) for r in range(2) for c in range(2)]
-    if request.param == "NamedQubit":  # type: ignore
+    if request.param == "NamedQubit":
         qubits = [Qubit("qubit" + str(x)) for x in range(4)]
     circ = Circuit()
     for q in qubits:
@@ -313,8 +313,8 @@ def test_clifford_compilation() -> None:
 
 def test_noisy_simulator_backends() -> None:
     nm = DepolarizingNoiseModel(depol_prob=0.01)
-    sim_backend = CirqDensityMatrixSimBackend(noise_model=nm)  # type: ignore
-    sample_backend = CirqDensityMatrixSampleBackend(noise_model=nm)  # type: ignore
+    sim_backend = CirqDensityMatrixSimBackend(noise_model=nm)
+    sample_backend = CirqDensityMatrixSampleBackend(noise_model=nm)
 
     assert sim_backend._simulator.noise == nm
     assert sample_backend._simulator.noise == nm
