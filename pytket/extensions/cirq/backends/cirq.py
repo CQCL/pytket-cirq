@@ -41,7 +41,7 @@ from pytket.passes import (  # type: ignore
     RemoveRedundancies,
     FullPeepholeOptimise,
 )
-from pytket._tket.circuit._library import _TK1_to_PhasedXRz, _CX  # type: ignore
+from pytket.circuit_library import _TK1_to_PhasedXRz, _CX  # type: ignore
 from pytket.predicates import (  # type: ignore
     GateSetPredicate,
     NoClassicalControlPredicate,
@@ -272,7 +272,6 @@ class _CirqSimBackend(_CirqBaseBackend):
         valid_check: bool = True,
         **kwargs: KwargTypes,
     ) -> List[ResultHandle]:
-
         if n_shots is not None:
             raise ValueError("`n_shots` argument is invalid for _CirqSimBackend")
 
@@ -329,7 +328,6 @@ class _CirqSimBackend(_CirqBaseBackend):
         valid_check: bool = True,
         **kwargs: KwargTypes,
     ) -> List[ResultHandle]:
-
         """
         Submit circuits to the backend for running. The results will be stored
         in the backend's result cache to be retrieved by the corresponding
