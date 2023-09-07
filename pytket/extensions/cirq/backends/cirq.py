@@ -569,5 +569,5 @@ _partial_clifford_rebase = RebaseCustom(
         OpType.CZ,
     },
     _CX(),
-    _tk1_to_phasedxrz_clifford,
+    _tk1_to_phasedxrz_clifford,  # type: ignore
 )
