@@ -24,10 +24,10 @@ import re
 from cirq.devices import LineQubit, GridQubit
 import cirq.ops
 import cirq_google
-from sympy import pi, Basic, Symbol  # type: ignore
+from sympy import pi, Basic, Symbol
 
-from pytket.circuit import Circuit, OpType, Qubit, Bit, Node  # type: ignore
-from pytket.architecture import Architecture  # type: ignore
+from pytket.circuit import Circuit, OpType, Qubit, Bit, Node
+from pytket.architecture import Architecture
 
 # For translating cirq circuits to tket circuits
 cirq_common = cirq.ops.common_gates
@@ -182,9 +182,10 @@ def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:
             elif isinstance(gate, cirq_common.MeasurementGate):
                 # Adding "_b" to the bit uid since for cirq.NamedQubit,
                 # the gate.key is equal to the qubit id (the qubit name)
-                uid = Bit(gate.key + "_b")
-                tkcirc.add_bit(uid)
-                tkcirc.Measure(*qb_lst, uid)
+                bitid = Bit(gate.key + "_b")
+                tkcirc.add_bit(bitid)
+                assert len(qb_lst) == 1
+                tkcirc.Measure(qb_lst[0], bitid)
                 continue
             elif isinstance(gate, cirq.ops.PhasedXPowGate):
                 optype = OpType.PhasedX
@@ -205,10 +206,10 @@ def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:
                         "Operation not supported by tket: " + str(op.gate)
                     ) from error
             if apply_in_parallel:
-                for qb in qb_lst:
-                    tkcirc.add_gate(optype, params, [qb])
+                for qbit in qb_lst:
+                    tkcirc.add_gate(optype, params, [qbit])  # type: ignore
             else:
-                tkcirc.add_gate(optype, params, qb_lst)
+                tkcirc.add_gate(optype, params, qb_lst)  # type: ignore
     return tkcirc
 
 
@@ -224,7 +225,7 @@ def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.
         for q in tkcirc.qubits:
             tkcirc.add_gate(OpType.noop, [q])
 
-    qmap = {}
+    qmap: Dict[Qubit, Union[cirq.ops.NamedQubit, LineQubit, GridQubit]] = {}
     line_name = None
     grid_name = None
     # Since Cirq can only support registers of up to 2 dimensions, we explicitly
@@ -324,7 +325,7 @@ def process_characterisation(
     :return: A dictionary containing device characteristics
     """
     data = device.metadata
-    qubits: FrozenSet[GridQubit] = data.qubit_set  # type: ignore
+    qubits: FrozenSet[GridQubit] = data.qubit_set
     qubit_graph = data.nx_graph
 
     qb_map = {q: Node("q", q.row, q.col) for q in qubits}

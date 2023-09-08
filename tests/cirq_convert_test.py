@@ -20,16 +20,16 @@ from cirq.circuits import InsertStrategy
 from cirq.devices import LineQubit, GridQubit
 from cirq.ops import NamedQubit
 
-from pytket import OpType  # type: ignore
+from pytket.circuit import OpType
 from pytket.extensions.cirq import cirq_to_tk, tk_to_cirq, process_characterisation
-from pytket.architecture import Architecture  # type: ignore
+from pytket.architecture import Architecture
 
 
 def get_match_circuit(
     cirq_qubit_type: str = "LineQubit", radian_gates: bool = False
 ) -> cirq.Circuit:
     if cirq_qubit_type == "LineQubit":
-        qubits = [LineQubit(i) for i in range(9)]  # type: ignore
+        qubits = [LineQubit(i) for i in range(9)]
     if cirq_qubit_type == "GridQubit":
         qubits = GridQubit.square(3)  # type: ignore
     if cirq_qubit_type == "NamedQubit":
@@ -130,7 +130,7 @@ def test_device() -> None:
 @pytest.mark.parametrize("cirq_qubit_type", ["LineQubit", "GridQubit", "NamedQubit"])
 def test_parallel_ops(cirq_qubit_type: str) -> None:
     if cirq_qubit_type == "LineQubit":
-        q0, q1, q2 = [LineQubit(i) for i in range(3)]  # type: ignore
+        q0, q1, q2 = [LineQubit(i) for i in range(3)]
     if cirq_qubit_type == "GridQubit":
         q0, q1, q2 = GridQubit.rect(rows=1, cols=3)  # type: ignore
     if cirq_qubit_type == "NamedQubit":

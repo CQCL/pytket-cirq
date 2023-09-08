@@ -27,9 +27,9 @@ from cirq.value import RANDOM_STATE_OR_SEED_LIKE
 from cirq.devices import NOISE_MODEL_LIKE
 from cirq.circuits import Circuit as CirqCircuit
 
-from pytket.circuit import Circuit, OpType, Qubit  # type: ignore
-from pytket.transform import Transform  # type: ignore
-from pytket.passes import (  # type: ignore
+from pytket.circuit import Circuit, OpType, Qubit
+from pytket.transform import Transform
+from pytket.passes import (
     BasePass,
     auto_rebase_pass,
     SequencePass,
@@ -41,8 +41,8 @@ from pytket.passes import (  # type: ignore
     RemoveRedundancies,
     FullPeepholeOptimise,
 )
-from pytket._tket.circuit._library import _TK1_to_PhasedXRz, _CX  # type: ignore
-from pytket.predicates import (  # type: ignore
+from pytket.circuit_library import _TK1_to_PhasedXRz, _CX
+from pytket.predicates import (
     GateSetPredicate,
     NoClassicalControlPredicate,
     NoFastFeedforwardPredicate,
@@ -54,7 +54,7 @@ from pytket.backends.backendinfo import BackendInfo
 from pytket.backends.resulthandle import _ResultIdTuple
 from pytket.utils.results import KwargTypes
 from pytket.utils.outcomearray import OutcomeArray
-from .cirq_convert import tk_to_cirq  # type: ignore
+from .cirq_convert import tk_to_cirq
 from .cirq_utils import _get_default_uids
 
 
@@ -272,7 +272,6 @@ class _CirqSimBackend(_CirqBaseBackend):
         valid_check: bool = True,
         **kwargs: KwargTypes,
     ) -> List[ResultHandle]:
-
         if n_shots is not None:
             raise ValueError("`n_shots` argument is invalid for _CirqSimBackend")
 
@@ -329,7 +328,6 @@ class _CirqSimBackend(_CirqBaseBackend):
         valid_check: bool = True,
         **kwargs: KwargTypes,
     ) -> List[ResultHandle]:
-
         """
         Submit circuits to the backend for running. The results will be stored
         in the backend's result cache to be retrieved by the corresponding
@@ -354,7 +352,7 @@ class _CirqSimBackend(_CirqBaseBackend):
             handle = ResultHandle(str(uuid4()), i)
             handle_list.append(handle)
             backres = self._run_circuit_moments(circuit)
-            self._cache[handle] = {"result": backres}  # type: ignore
+            self._cache[handle] = {"result": backres}
 
         return handle_list
 
@@ -571,5 +569,5 @@ _partial_clifford_rebase = RebaseCustom(
         OpType.CZ,
     },
     _CX(),
-    _tk1_to_phasedxrz_clifford,
+    _tk1_to_phasedxrz_clifford,  # type: ignore
 )
