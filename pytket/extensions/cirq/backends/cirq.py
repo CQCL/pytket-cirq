@@ -41,7 +41,7 @@ from pytket.passes import (
     RemoveRedundancies,
     FullPeepholeOptimise,
 )
-from pytket.circuit_library import _TK1_to_PhasedXRz, _CX
+from pytket.circuit_library import TK1_to_PhasedXRz, CX
 from pytket.predicates import (
     GateSetPredicate,
     NoClassicalControlPredicate,
