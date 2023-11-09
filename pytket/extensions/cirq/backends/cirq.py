@@ -494,7 +494,7 @@ class CirqCliffordSimBackend(_CirqSimBackend):
 
 
 _cirq_squash = SquashCustom(
-    {OpType.PhasedX, OpType.Rz, OpType.Rx, OpType.Ry}, _TK1_to_PhasedXRz
+    {OpType.PhasedX, OpType.Rz, OpType.Rx, OpType.Ry}, TK1_to_PhasedXRz
 )
 
 _regular_gate_set_predicate = GateSetPredicate(
@@ -546,7 +546,7 @@ _clifford_gate_set_predicate = GateSetPredicate(
 
 
 def _tk1_to_phasedxrz_clifford(a: float, b: float, c: float) -> Circuit:
-    circ = _TK1_to_PhasedXRz(a, b, c)
+    circ = TK1_to_PhasedXRz(a, b, c)
     Transform.RebaseToCliffordSingles().apply(circ)
     return circ
 
@@ -568,6 +568,6 @@ _partial_clifford_rebase = RebaseCustom(
         OpType.CX,
         OpType.CZ,
     },
-    _CX(),
+    CX(),
     _tk1_to_phasedxrz_clifford,  # type: ignore
 )
