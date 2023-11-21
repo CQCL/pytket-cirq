@@ -1,8 +1,3 @@
-# Pytket Extensions
-
-This repository contains the pytket-cirq extension, using Quantinuum's
-[pytket](https://cqcl.github.io/tket/pytket/api/index.html) quantum SDK.
-
 # pytket-cirq
 
 [Pytket](https://cqcl.github.io/tket/pytket/api/index.html) is a python module for interfacing
