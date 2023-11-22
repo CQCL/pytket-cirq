@@ -1,4 +1,4 @@
 pytest
-pytest-timeout
+pytest-timeout ~= 2.2.0
 hypothesis
 requests_mock
