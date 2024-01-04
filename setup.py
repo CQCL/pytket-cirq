@@ -32,7 +32,7 @@ setup(
     author_email="tket-support@cambridgequantum.com",
     python_requires=">=3.8",
     project_urls={
-        "Documentation": "https://tket.quantinuum.com/extensions/pytket-cirq/api/index.html",
+        "Documentation": "https://tket.quantinuum.com/extensions/pytket-cirq/index.html",
         "Source": "https://github.com/CQCL/pytket-cirq",
         "Tracker": "https://github.com/CQCL/pytket-cirq/issues",
     },
