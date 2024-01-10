@@ -32,7 +32,7 @@ setup(
     author_email="tket-support@cambridgequantum.com",
     python_requires=">=3.8",
     project_urls={
-        "Documentation": "https://tket.quantinuum.com/extensions/pytket-cirq/api/index.html",
+        "Documentation": "https://tket.quantinuum.com/extensions/pytket-cirq/index.html",
         "Source": "https://github.com/CQCL/pytket-cirq",
         "Tracker": "https://github.com/CQCL/pytket-cirq/issues",
     },
@@ -44,10 +44,10 @@ setup(
     packages=find_namespace_packages(include=["pytket.*"]),
     include_package_data=True,
     install_requires=[
-        "pytket ~= 1.22",
+        "pytket ~= 1.23",
         "cirq-core ~= 1.0",
         "cirq-google ~= 1.0",
-        "protobuf ~= 3.20, < 4.0",
+        "protobuf >= 3.20, < 5.0",
     ],
     classifiers=[
         "Environment :: Console",

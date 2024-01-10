@@ -54,6 +54,7 @@ from pytket.backends.backendinfo import BackendInfo
 from pytket.backends.resulthandle import _ResultIdTuple
 from pytket.utils.results import KwargTypes
 from pytket.utils.outcomearray import OutcomeArray
+from pytket.extensions.cirq._metadata import __extension_version__
 from .cirq_convert import tk_to_cirq
 from .cirq_utils import _get_default_uids
 
@@ -102,7 +103,13 @@ class _CirqBaseBackend(Backend):
 
     @property
     def backend_info(self) -> Optional[BackendInfo]:
-        return None
+        return BackendInfo(
+            type(self).__name__,
+            None,
+            __extension_version__,
+            None,
+            self._gate_set_predicate.gate_set,
+        )
 
     @property
     def characterisation(self) -> Optional[dict]:

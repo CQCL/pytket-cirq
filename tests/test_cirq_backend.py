@@ -369,9 +369,26 @@ def test_invalid_n_shots_in_sim_backends(cirq_backend: _CirqSimBackend) -> None:
         CirqCliffordSimBackend(),
     ],
 )
-def test_backend_info_and_characterisation_are_none(
+def test_characterisation_are_none(
     cirq_backend: _CirqBaseBackend,
 ) -> None:
     b = cirq_backend
-    assert b.backend_info is None
     assert b.characterisation is None
+
+
+@pytest.mark.parametrize(
+    "cirq_backend",
+    [
+        CirqDensityMatrixSampleBackend(),
+        CirqDensityMatrixSimBackend(),
+        CirqStateSampleBackend(),
+        CirqStateSimBackend(),
+        CirqCliffordSampleBackend(),
+        CirqCliffordSimBackend(),
+    ],
+)
+def test_backend_info(cirq_backend: _CirqBaseBackend) -> None:
+    b = cirq_backend
+    assert b.backend_info is not None
+    assert b.backend_info.name == b.__class__.__name__
+    assert b.backend_info.gate_set == b._gate_set_predicate.gate_set
