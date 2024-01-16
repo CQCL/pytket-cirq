@@ -30,7 +30,7 @@ setup(
     version=metadata["__extension_version__"],
     author="TKET development team",
     author_email="tket-support@cambridgequantum.com",
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     project_urls={
         "Documentation": "https://tket.quantinuum.com/extensions/pytket-cirq/index.html",
         "Source": "https://github.com/CQCL/pytket-cirq",
