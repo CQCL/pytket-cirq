@@ -5,6 +5,8 @@ Unreleased
 --------------------
 
 * Implement ``backend_info`` property.
+* Python 3.12 support added, 3.9 dropped.
+* pytket dependency updated to 1.24
 
 0.32.0 (November 2023)
 ----------------------
