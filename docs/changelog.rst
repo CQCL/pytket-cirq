@@ -1,13 +1,17 @@
 Changelog
 ~~~~~~~~~
 
+0.34.0 (January 2024)
+---------------------
+
+* Python 3.12 support added, 3.9 dropped.
+* Updated pytket version requirement to 1.24.
+
 0.33.0 (January 2024)
 ---------------------
 
 * Updated pytket version requirement to 1.23.
 * Implement ``backend_info`` property.
-* Python 3.12 support added, 3.9 dropped.
-* Updated pytket version requirement to 1.24.
 
 0.32.0 (November 2023)
 ----------------------
