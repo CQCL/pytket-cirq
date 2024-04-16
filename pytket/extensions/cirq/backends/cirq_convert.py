@@ -265,7 +265,7 @@ def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.
                 "Cannot convert tket Op to Cirq gate: " + op.get_name()
             ) from error
         if optype == OpType.Measure:
-            qid = qmap[Qubit(command.args[0])]
+            qid = qmap[cast(Qubit, command.args[0])]
             bit = command.args[1]
             # Removing the "_b" added to measurement bit registers uids,
             # for dealing with NamedQubits
