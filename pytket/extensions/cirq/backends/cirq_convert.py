@@ -1,4 +1,4 @@
-# Copyright 2019-2024 Cambridge Quantum Computing
+# Copyright 2019-2024 Quantinuum
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -265,7 +265,7 @@ def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.
                 "Cannot convert tket Op to Cirq gate: " + op.get_name()
             ) from error
         if optype == OpType.Measure:
-            qid = qmap[command.args[0]]
+            qid = qmap[cast(Qubit, command.args[0])]
             bit = command.args[1]
             # Removing the "_b" added to measurement bit registers uids,
             # for dealing with NamedQubits
@@ -274,7 +274,7 @@ def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.
                 bit_repr = bit_repr[0:-2]
             cirqop = cirq.ops.measure(qid, key=bit_repr)
         else:
-            qids = [qmap[qbit] for qbit in command.args]
+            qids = [qmap[cast(Qubit, qbit)] for qbit in command.args]
             params = op.params
             if len(params) == 0:
                 cirqop = gatetype(*qids)
