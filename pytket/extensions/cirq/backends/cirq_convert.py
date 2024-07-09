@@ -207,9 +207,9 @@ def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:
                     ) from error
             if apply_in_parallel:
                 for qbit in qb_lst:
-                    tkcirc.add_gate(optype, params, [qbit])  # type: ignore
+                    tkcirc.add_gate(optype, params, [qbit])
             else:
-                tkcirc.add_gate(optype, params, qb_lst)  # type: ignore
+                tkcirc.add_gate(optype, params, qb_lst)
     return tkcirc
 
 
