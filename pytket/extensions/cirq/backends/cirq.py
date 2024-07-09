@@ -140,9 +140,9 @@ class _CirqSampleBackend(_CirqBaseBackend):
         super().__init__()
         self._supports_shots: bool = True
         self._supports_counts: bool = True
-        self._simulator: Union[
-            Simulator, DensityMatrixSimulator, CliffordSimulator
-        ] = Simulator()
+        self._simulator: Union[Simulator, DensityMatrixSimulator, CliffordSimulator] = (
+            Simulator()
+        )
 
     def _run_circuit(self, circuit: Circuit, n_shots: int) -> BackendResult:
         cirq_circ = tk_to_cirq(circuit)
