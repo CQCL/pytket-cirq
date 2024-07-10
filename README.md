@@ -6,6 +6,9 @@ with tket, a quantum computing toolkit and optimising compiler developed by Quan
 `pytket-cirq` is an extension to `pytket` that allows conversion to and from
 Cirq representations.
 
+Some useful links:
+- [API Documentation](https://tket.quantinuum.com/extensions/pytket-cirq/)
+
 ## Getting started
 
 `pytket-cirq` is available for Python 3.10, 3.11 and 3.12, on Linux, MacOS
