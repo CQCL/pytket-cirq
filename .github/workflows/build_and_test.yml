@@ -108,7 +108,7 @@ jobs:
         user: __token__
         password: ${{ secrets.PYPI_PYTKET_CIRQ_API_TOKEN }}
         verbose: true
-
+        
   build_docs:
     name: Build docs
     if: github.event_name == 'release'
@@ -118,25 +118,27 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: '0'
-    - name: Set up Python 3.10
+        submodules: true
+    - name: Set up Python 3.11
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
+        python-version: '3.11'
     - name: Download all wheels
       uses: actions/download-artifact@v4
       with:
         path: wheelhouse
     - name: Install pip, wheel
       run: pip install -U pip wheel
+    - name: Install poetry
+      run: pip install poetry
     - name: Install extension
-      run: for w in `find wheelhouse/ -type f -name "*.whl"` ; do pip install $w ; done
+      run: for w in `find wheelhouse/ -type f -name "*.whl"` ; do poetry install $w ; done
     - name: Install docs dependencies
       run: |
         cd docs
-        poetry run bash ./build-docs.sh
+        bash ./install.sh
     - name: Build docs
       timeout-minutes: 20
       run: |
-        cd .github/workflows/docs
-        mkdir extensions
-        ./build-docs -d ${GITHUB_WORKSPACE}/.github/workflows/docs/extensions/api
+        cd docs
+        poetry run bash ./build-docs.sh
