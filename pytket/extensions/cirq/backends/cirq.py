@@ -14,7 +14,7 @@
 
 from abc import abstractmethod
 from collections.abc import Sequence
-from typing import List, Optional, Union, cast
+from typing import Optional, Union, cast
 from uuid import uuid4
 
 from cirq import ops
@@ -94,7 +94,7 @@ class _CirqBaseBackend(Backend):
         return auto_rebase_pass({OpType.CZ, OpType.PhasedX, OpType.Rz})
 
     @property
-    def required_predicates(self) -> List[Predicate]:
+    def required_predicates(self) -> list[Predicate]:
         preds = [
             NoClassicalControlPredicate(),
             NoFastFeedforwardPredicate(),
@@ -154,10 +154,7 @@ class _CirqSampleBackend(_CirqBaseBackend):
             run = self._simulator.run(cirq_circ, repetitions=n_shots)
             run_dict = run.data.to_dict()
             c_bits = [
-                bit
-                for key in run_dict.keys()
-                for bit in bit_to_qubit_map
-                if str(bit) == key
+                bit for key in run_dict for bit in bit_to_qubit_map if str(bit) == key
             ]
             individual_readouts = [
                 list(readout.values()) for readout in run_dict.values()
@@ -173,7 +170,7 @@ class _CirqSampleBackend(_CirqBaseBackend):
         n_shots: Union[None, int, Sequence[Optional[int]]] = None,
         valid_check: bool = True,
         **kwargs: KwargTypes,
-    ) -> List[ResultHandle]:
+    ) -> list[ResultHandle]:
         circuits = list(circuits)
         n_shots_list = Backend._get_n_shots_as_list(
             n_shots,
@@ -279,7 +276,7 @@ class _CirqSimBackend(_CirqBaseBackend):
         n_shots: Optional[Union[int, Sequence[int]]] = None,
         valid_check: bool = True,
         **kwargs: KwargTypes,
-    ) -> List[ResultHandle]:
+    ) -> list[ResultHandle]:
         if n_shots is not None:
             raise ValueError("`n_shots` argument is invalid for _CirqSimBackend")
 
@@ -298,7 +295,7 @@ class _CirqSimBackend(_CirqBaseBackend):
     @abstractmethod
     def package_results(
         self, circuit: CirqCircuit, q_bits: Sequence[Qubit]
-    ) -> List[BackendResult]:
+    ) -> list[BackendResult]:
         """
 
         :param circuit: The circuit to simulate.
@@ -310,7 +307,7 @@ class _CirqSimBackend(_CirqBaseBackend):
         """
         ...
 
-    def _run_circuit_moments(self, circuit: Circuit) -> List[BackendResult]:
+    def _run_circuit_moments(self, circuit: Circuit) -> list[BackendResult]:
         cirq_circ = tk_to_cirq(circuit, copy_all_qubits=True)
         _, q_bits = _get_default_uids(cirq_circ, circuit)
         return self.package_results(cirq_circ, q_bits)
@@ -335,7 +332,7 @@ class _CirqSimBackend(_CirqBaseBackend):
         circuits: Sequence[Circuit],
         valid_check: bool = True,
         **kwargs: KwargTypes,
-    ) -> List[ResultHandle]:
+    ) -> list[ResultHandle]:
         """
         Submit circuits to the backend for running. The results will be stored
         in the backend's result cache to be retrieved by the corresponding
@@ -386,7 +383,7 @@ class CirqStateSimBackend(_CirqSimBackend):
 
     def package_results(
         self, circuit: CirqCircuit, q_bits: Sequence[Qubit]
-    ) -> List[BackendResult]:
+    ) -> list[BackendResult]:
         moments = self._simulator.simulate_moment_steps(
             circuit,
             qubit_order=ops.QubitOrder.as_qubit_order(ops.QubitOrder.DEFAULT).order_for(
@@ -423,7 +420,7 @@ class CirqDensityMatrixSimBackend(_CirqSimBackend):
 
     def package_results(
         self, circuit: CirqCircuit, q_bits: Sequence[Qubit]
-    ) -> List[BackendResult]:
+    ) -> list[BackendResult]:
         moments = self._simulator.simulate_moment_steps(circuit)
         all_backres = [
             BackendResult(
@@ -484,7 +481,7 @@ class CirqCliffordSimBackend(_CirqSimBackend):
 
     def package_results(
         self, circuit: CirqCircuit, q_bits: Sequence[Qubit]
-    ) -> List[BackendResult]:
+    ) -> list[BackendResult]:
         moments = self._simulator.simulate_moment_steps(
             circuit,
             qubit_order=ops.QubitOrder.as_qubit_order(ops.QubitOrder.DEFAULT).order_for(

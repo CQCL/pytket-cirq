@@ -20,7 +20,7 @@ Devices
 import cmath
 import re
 from logging import warning
-from typing import Any, Dict, FrozenSet, List, Type, Union, cast
+from typing import Any, Union, cast
 
 import cirq_google
 from sympy import Basic, Symbol, pi
@@ -68,7 +68,7 @@ _cirq2ops_mapping = {
     cirq.ops.PhasedISwapPowGate: OpType.PhasedISWAP,
 }
 # reverse mapping for convenience
-_ops2cirq_mapping: Dict = dict((item[1], item[0]) for item in _cirq2ops_mapping.items())
+_ops2cirq_mapping: dict = dict((item[1], item[0]) for item in _cirq2ops_mapping.items())
 # spot special rotation gates
 _constant_gates = (
     cirq_common.CNOT,
@@ -169,11 +169,11 @@ def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:
                     raise NotImplementedError(
                         "Operation not supported by tket: " + str(op.gate)
                     ) from error
-                params: List[Union[float, Basic, Symbol]] = []
+                params: list[Union[float, Basic, Symbol]] = []
             elif gatetype in _radian_gates:
                 try:
                     optype = _cirq2ops_radians_mapping[
-                        cast(Type[cirq.ops.EigenGate], gatetype)
+                        cast(type[cirq.ops.EigenGate], gatetype)
                     ]
                 except KeyError as error:
                     raise NotImplementedError(
@@ -226,7 +226,7 @@ def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.
         for q in tkcirc.qubits:
             tkcirc.add_gate(OpType.noop, [q])
 
-    qmap: Dict[Qubit, Union[cirq.ops.NamedQubit, LineQubit, GridQubit]] = {}
+    qmap: dict[Qubit, Union[cirq.ops.NamedQubit, LineQubit, GridQubit]] = {}
     line_name = None
     grid_name = None
     # Since Cirq can only support registers of up to 2 dimensions, we explicitly
@@ -238,14 +238,14 @@ def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.
         if len(qb.index) == 0:
             qmap.update({qb: cirq.ops.NamedQubit(qb.reg_name)})
         elif len(qb.index) == 1:
-            if line_name != None and line_name != qb.reg_name:
+            if line_name is not None and line_name != qb.reg_name:
                 raise NotImplementedError(
                     "Cirq can only support a single linear register"
                 )
             line_name = qb.reg_name
             qmap.update({qb: LineQubit(qb.index[0])})
         elif len(qb.index) == 2 or (len(qb.index) == 3 and is_flat_3d):
-            if grid_name != None and grid_name != qb.reg_name:
+            if grid_name is not None and grid_name != qb.reg_name:
                 raise NotImplementedError(
                     "Cirq can only support a single grid register"
                 )
@@ -309,7 +309,7 @@ def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.
 # For converting cirq devices to tket devices
 
 
-def _sort_row_col(qubits: FrozenSet[GridQubit]) -> List[GridQubit]:
+def _sort_row_col(qubits: frozenset[GridQubit]) -> list[GridQubit]:
     """Sort grid qubits first by row then by column"""
 
     return sorted(qubits, key=lambda x: (x.row, x.col))
@@ -326,7 +326,7 @@ def process_characterisation(
     :return: A dictionary containing device characteristics
     """
     data = device.metadata
-    qubits: FrozenSet[GridQubit] = data.qubit_set
+    qubits: frozenset[GridQubit] = data.qubit_set
     qubit_graph = data.nx_graph
 
     qb_map = {q: Node("q", q.row, q.col) for q in qubits}

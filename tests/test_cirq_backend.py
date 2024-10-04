@@ -14,7 +14,6 @@
 
 import math
 from collections import Counter
-from typing import List
 
 import numpy as np
 import pytest
@@ -60,7 +59,7 @@ def fixture_qubit_readout_circ(request: FixtureRequest) -> Circuit:
 
 
 def test_blank_wires() -> None:
-    backends: List[_CirqBaseBackend] = [
+    backends: list[_CirqBaseBackend] = [
         CirqDensityMatrixSimBackend(),
         CirqStateSimBackend(),
         CirqCliffordSimBackend(),

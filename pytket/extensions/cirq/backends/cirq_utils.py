@@ -15,7 +15,7 @@
 """Shared utility methods for cirq backends.
 """
 
-from typing import List, Tuple, cast
+from typing import cast
 
 from cirq.circuits import Circuit as CirqCircuit
 from cirq.devices import GridQubit, LineQubit
@@ -26,7 +26,7 @@ from pytket.circuit import Bit, Circuit, Qubit
 
 def _get_default_uids(
     cirq_circuit: CirqCircuit, tket_circuit: Circuit
-) -> Tuple[List[Bit], List[Qubit]]:
+) -> tuple[list[Bit], list[Qubit]]:
     if len(tket_circuit.qubit_readout) == 0:
         return [], tket_circuit.qubits
     else:
