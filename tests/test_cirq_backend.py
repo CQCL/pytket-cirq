@@ -12,28 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import math
 from collections import Counter
 from typing import List
-import math
 
-from hypothesis import given, strategies
 import numpy as np
 import pytest
 from _pytest.fixtures import FixtureRequest
 from cirq.contrib.noise_models import DepolarizingNoiseModel
+from hypothesis import given, strategies
 
+from pytket.backends import StatusEnum
+from pytket.circuit import Bit, Circuit, Qubit
 from pytket.extensions.cirq.backends.cirq import (
+    CirqCliffordSampleBackend,
+    CirqCliffordSimBackend,
     CirqDensityMatrixSampleBackend,
     CirqDensityMatrixSimBackend,
     CirqStateSampleBackend,
     CirqStateSimBackend,
-    CirqCliffordSampleBackend,
-    CirqCliffordSimBackend,
-    _CirqSimBackend,
     _CirqBaseBackend,
+    _CirqSimBackend,
 )
-from pytket.circuit import Circuit, Qubit, Bit
-from pytket.backends import StatusEnum
 from pytket.predicates import GateSetPredicate
 
 

@@ -14,13 +14,13 @@
 """Module for conversion between Google Cirq and tket primitives."""
 
 # _metadata.py is copied to the folder after installation.
-from ._metadata import __extension_version__, __extension_name__
-from .backends.cirq_convert import cirq_to_tk, tk_to_cirq, process_characterisation
+from ._metadata import __extension_name__, __extension_version__
 from .backends import (
-    CirqStateSampleBackend,
-    CirqStateSimBackend,
     CirqCliffordSampleBackend,
     CirqCliffordSimBackend,
     CirqDensityMatrixSampleBackend,
     CirqDensityMatrixSimBackend,
+    CirqStateSampleBackend,
+    CirqStateSimBackend,
 )
+from .backends.cirq_convert import cirq_to_tk, process_characterisation, tk_to_cirq

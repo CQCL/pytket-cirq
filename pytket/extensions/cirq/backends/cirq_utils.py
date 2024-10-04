@@ -15,12 +15,13 @@
 """Shared utility methods for cirq backends.
 """
 
-from typing import Tuple, List, cast
+from typing import List, Tuple, cast
+
 from cirq.circuits import Circuit as CirqCircuit
-from cirq.ops import QubitOrder, MeasurementGate, NamedQubit
-from cirq.devices import LineQubit, GridQubit
+from cirq.devices import GridQubit, LineQubit
+from cirq.ops import MeasurementGate, NamedQubit, QubitOrder
 from cirq.protocols import is_measurement
-from pytket.circuit import Circuit, Qubit, Bit
+from pytket.circuit import Bit, Circuit, Qubit
 
 
 def _get_default_uids(

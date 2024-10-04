@@ -13,48 +13,49 @@
 # limitations under the License.
 
 from abc import abstractmethod
-from typing import Sequence, cast, Optional, List, Union
+from collections.abc import Sequence
+from typing import List, Optional, Union, cast
 from uuid import uuid4
+
+from cirq import ops
+from cirq.circuits import Circuit as CirqCircuit
+from cirq.devices import NOISE_MODEL_LIKE
 from cirq.sim import (
     CliffordSimulator,
     CliffordSimulatorStepResult,
     DensityMatrixSimulator,
     Simulator,
 )
-
-from cirq import ops
 from cirq.value import RANDOM_STATE_OR_SEED_LIKE
-from cirq.devices import NOISE_MODEL_LIKE
-from cirq.circuits import Circuit as CirqCircuit
-
+from pytket.backends import Backend, CircuitStatus, ResultHandle, StatusEnum
+from pytket.backends.backendinfo import BackendInfo
+from pytket.backends.backendresult import BackendResult
+from pytket.backends.resulthandle import _ResultIdTuple
 from pytket.circuit import Circuit, OpType, Qubit
-from pytket.transform import Transform
+from pytket.circuit_library import CX, TK1_to_PhasedXRz
+from pytket.extensions.cirq._metadata import __extension_version__
 from pytket.passes import (
     BasePass,
-    auto_rebase_pass,
-    SequencePass,
-    RebaseCustom,
-    SquashCustom,
-    SynthesiseTket,
     DecomposeBoxes,
     FlattenRegisters,
-    RemoveRedundancies,
     FullPeepholeOptimise,
+    RebaseCustom,
+    RemoveRedundancies,
+    SequencePass,
+    SquashCustom,
+    SynthesiseTket,
+    auto_rebase_pass,
 )
-from pytket.circuit_library import TK1_to_PhasedXRz, CX
 from pytket.predicates import (
     GateSetPredicate,
     NoClassicalControlPredicate,
     NoFastFeedforwardPredicate,
     Predicate,
 )
-from pytket.backends import Backend, ResultHandle, CircuitStatus, StatusEnum
-from pytket.backends.backendresult import BackendResult
-from pytket.backends.backendinfo import BackendInfo
-from pytket.backends.resulthandle import _ResultIdTuple
-from pytket.utils.results import KwargTypes
+from pytket.transform import Transform
 from pytket.utils.outcomearray import OutcomeArray
-from pytket.extensions.cirq._metadata import __extension_version__
+from pytket.utils.results import KwargTypes
+
 from .cirq_convert import tk_to_cirq
 from .cirq_utils import _get_default_uids
 
@@ -155,7 +156,7 @@ class _CirqSampleBackend(_CirqBaseBackend):
             c_bits = [
                 bit
                 for key in run_dict.keys()
-                for bit in bit_to_qubit_map.keys()
+                for bit in bit_to_qubit_map
                 if str(bit) == key
             ]
             individual_readouts = [

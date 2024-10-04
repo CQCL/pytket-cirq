@@ -17,17 +17,18 @@ Methods to allow conversion between Cirq and tket data types, including Circuits
 Devices
 """
 
-from typing import List, Dict, FrozenSet, cast, Any, Union, Type
 import cmath
-from logging import warning
 import re
-from cirq.devices import LineQubit, GridQubit
-import cirq.ops
-import cirq_google
-from sympy import pi, Basic, Symbol
+from logging import warning
+from typing import Any, Dict, FrozenSet, List, Type, Union, cast
 
-from pytket.circuit import Circuit, OpType, Qubit, Bit, Node
+import cirq_google
+from sympy import Basic, Symbol, pi
+
+import cirq.ops
+from cirq.devices import GridQubit, LineQubit
 from pytket.architecture import Architecture
+from pytket.circuit import Bit, Circuit, Node, OpType, Qubit
 
 # For translating cirq circuits to tket circuits
 cirq_common = cirq.ops.common_gates
