@@ -31,7 +31,7 @@ from pytket.circuit import Circuit, OpType, Qubit
 from pytket.transform import Transform
 from pytket.passes import (
     BasePass,
-    auto_rebase_pass,
+    AutoRebase,
     SequencePass,
     RebaseCustom,
     SquashCustom,
@@ -90,7 +90,7 @@ class _CirqBaseBackend(Backend):
         self._gate_set_predicate = _regular_gate_set_predicate
 
     def rebase_pass(self) -> BasePass:
-        return auto_rebase_pass({OpType.CZ, OpType.PhasedX, OpType.Rz})
+        return AutoRebase({OpType.CZ, OpType.PhasedX, OpType.Rz})
 
     @property
     def required_predicates(self) -> List[Predicate]:
