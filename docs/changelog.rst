@@ -3,6 +3,13 @@
 Changelog
 ~~~~~~~~~
 
+0.39.0 (November 2024)
+----------------------
+
+* Updat pytket version requirement to 1.35.
+* Support Python 3.13.
+* Relax dependency requirements.
+
 0.38.0 (October 2024)
 ---------------------
 
