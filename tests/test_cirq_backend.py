@@ -321,10 +321,10 @@ def test_noisy_simulator_backends() -> None:
 
 
 @given(
-    n_shots=strategies.integers(min_value=1, max_value=10),  # type: ignore
+    n_shots=strategies.integers(min_value=1, max_value=10),
     n_bits=strategies.integers(min_value=0, max_value=10),
 )
-def test_shots_bits_edgecases(n_shots, n_bits) -> None:
+def test_shots_bits_edgecases(n_shots, n_bits) -> None:  # type: ignore
     cirq_backend = CirqStateSampleBackend()
     c = Circuit(n_bits, n_bits)
 
