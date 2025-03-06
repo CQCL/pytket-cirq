@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Shared utility methods for cirq backends.
-"""
+"""Shared utility methods for cirq backends."""
 
 from typing import Tuple, List, cast
 from cirq.circuits import Circuit as CirqCircuit
