@@ -151,3 +151,15 @@ def test_unsupported_qubit_type() -> None:
     with pytest.raises(NotImplementedError) as error:
         cirq_to_tk(circ)
         assert "Cannot convert qubits of type" in str(error.value)
+
+
+def test_reset() -> None:
+    # https://github.com/CQCL/pytket-cirq/issues/96
+    q0 = LineQubit(0)
+    circ = cirq.Circuit([cirq.ops.ResetChannel().on(q0)])
+    c_tk = cirq_to_tk(circ)
+    cmds = c_tk.get_commands()
+    assert len(cmds) == 1
+    assert cmds[0].op.type == OpType.Reset
+    circ1 = tk_to_cirq(c_tk)
+    assert circ == circ1
