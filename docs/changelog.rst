@@ -10,7 +10,6 @@ Changelog
 * Update cirq-core and cirq-google minimium version requirement to 1.4.1.
 * Update protobuf minimium version requirement to 4.25.6.
 * Add support for reset operation.
-* Add support for Python 3.13.
 
 0.39.0 (November 2024)
 ----------------------
