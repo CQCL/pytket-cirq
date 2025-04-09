@@ -3,10 +3,13 @@
 Changelog
 ~~~~~~~~~
 
-0.40.0 (unreleased)
+0.40.0 (April 2025)
 -------------------
 
-* Update pytket minimium version requirement to 2.0.1.
+* Update pytket minimium version requirement to 2.2.0.
+* Update cirq-core and cirq-google minimium version requirement to 1.4.1.
+* Update protobuf minimium version requirement to 4.25.6.
+* Add support for reset operation.
 
 0.39.0 (November 2024)
 ----------------------

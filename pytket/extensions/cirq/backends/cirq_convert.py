@@ -65,6 +65,7 @@ _cirq2ops_mapping = {
     cirq.ops.parity_gates.YYPowGate: OpType.YYPhase,
     cirq.ops.PhasedXPowGate: OpType.PhasedX,
     cirq.ops.PhasedISwapPowGate: OpType.PhasedISWAP,
+    cirq.ops.common_channels.ResetChannel: OpType.Reset,
 }
 # reverse mapping for convenience
 _ops2cirq_mapping: Dict = dict((item[1], item[0]) for item in _cirq2ops_mapping.items())
@@ -169,6 +170,9 @@ def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:
                         "Operation not supported by tket: " + str(op.gate)
                     ) from error
                 params: List[Union[float, Basic, Symbol]] = []
+            elif isinstance(gate, cirq.ops.common_channels.ResetChannel):
+                optype = OpType.Reset
+                params = []
             elif gatetype in _radian_gates:
                 try:
                     optype = _cirq2ops_radians_mapping[
@@ -273,6 +277,9 @@ def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.
             if re.search("_b$", bit_repr):
                 bit_repr = bit_repr[0:-2]
             cirqop = cirq.ops.measure(qid, key=bit_repr)
+        elif optype == OpType.Reset:
+            qid = qmap[cast(Qubit, command.args[0])]
+            cirqop = cirq.ops.ResetChannel().on(qid)
         else:
             qids = [qmap[cast(Qubit, qbit)] for qbit in command.args]
             params = op.params
