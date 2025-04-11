@@ -45,8 +45,8 @@ setup(
     include_package_data=True,
     install_requires=[
         "pytket >= 2.2.0",
-        "cirq-core >= 1.4.1",
-        "cirq-google >= 1.4.1",
+        "cirq-core >= 1.5.0",
+        "cirq-google >= 1.5.0",
         "protobuf >= 4.25.6",
     ],
     classifiers=[
@@ -54,6 +54,7 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: MacOS :: MacOS X",
         "Operating System :: POSIX :: Linux",
