@@ -1,4 +1,4 @@
-# Copyright Quantinuum
+# Copyright Quantinuum  # noqa: EXE002
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,17 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
-
 import cirq
 import cirq_google
+import pytest
 from cirq.circuits import InsertStrategy
-from cirq.devices import LineQubit, GridQubit
+from cirq.devices import GridQubit, LineQubit
 from cirq.ops import NamedQubit
 
-from pytket.circuit import OpType
-from pytket.extensions.cirq import cirq_to_tk, tk_to_cirq, process_characterisation
 from pytket.architecture import Architecture
+from pytket.circuit import OpType
+from pytket.extensions.cirq import cirq_to_tk, process_characterisation, tk_to_cirq
 
 
 def get_match_circuit(
@@ -81,7 +80,7 @@ def get_match_circuit(
         cirq_command_list,
         strategy=InsertStrategy.EARLIEST,
     )
-    return circ
+    return circ  # noqa: RET504
 
 
 @pytest.mark.parametrize("cirq_qubit_type", ["LineQubit", "GridQubit", "NamedQubit"])

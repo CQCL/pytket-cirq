@@ -13,48 +13,49 @@
 # limitations under the License.
 
 from abc import abstractmethod
-from typing import Sequence, cast, Optional, List, Union
+from collections.abc import Sequence
+from typing import cast
 from uuid import uuid4
+
+from cirq import ops
+from cirq.circuits import Circuit as CirqCircuit
+from cirq.devices import NOISE_MODEL_LIKE
 from cirq.sim import (
     CliffordSimulator,
     CliffordSimulatorStepResult,
     DensityMatrixSimulator,
     Simulator,
 )
-
-from cirq import ops
 from cirq.value import RANDOM_STATE_OR_SEED_LIKE
-from cirq.devices import NOISE_MODEL_LIKE
-from cirq.circuits import Circuit as CirqCircuit
-
+from pytket.backends import Backend, CircuitStatus, ResultHandle, StatusEnum
+from pytket.backends.backendinfo import BackendInfo
+from pytket.backends.backendresult import BackendResult
+from pytket.backends.resulthandle import _ResultIdTuple
 from pytket.circuit import Circuit, OpType, Qubit
-from pytket.transform import Transform
+from pytket.circuit_library import CX, TK1_to_PhasedXRz
+from pytket.extensions.cirq._metadata import __extension_version__
 from pytket.passes import (
-    BasePass,
     AutoRebase,
-    SequencePass,
-    RebaseCustom,
-    SquashCustom,
-    SynthesiseTket,
+    BasePass,
     DecomposeBoxes,
     FlattenRegisters,
-    RemoveRedundancies,
     FullPeepholeOptimise,
+    RebaseCustom,
+    RemoveRedundancies,
+    SequencePass,
+    SquashCustom,
+    SynthesiseTket,
 )
-from pytket.circuit_library import TK1_to_PhasedXRz, CX
 from pytket.predicates import (
     GateSetPredicate,
     NoClassicalControlPredicate,
     NoFastFeedforwardPredicate,
     Predicate,
 )
-from pytket.backends import Backend, ResultHandle, CircuitStatus, StatusEnum
-from pytket.backends.backendresult import BackendResult
-from pytket.backends.backendinfo import BackendInfo
-from pytket.backends.resulthandle import _ResultIdTuple
-from pytket.utils.results import KwargTypes
+from pytket.transform import Transform
 from pytket.utils.outcomearray import OutcomeArray
-from pytket.extensions.cirq._metadata import __extension_version__
+from pytket.utils.results import KwargTypes
+
 from .cirq_convert import tk_to_cirq
 from .cirq_utils import _get_default_uids
 
@@ -93,16 +94,16 @@ class _CirqBaseBackend(Backend):
         return AutoRebase({OpType.CZ, OpType.PhasedX, OpType.Rz})
 
     @property
-    def required_predicates(self) -> List[Predicate]:
+    def required_predicates(self) -> list[Predicate]:
         preds = [
             NoClassicalControlPredicate(),
             NoFastFeedforwardPredicate(),
             self._gate_set_predicate,
         ]
-        return preds
+        return preds  # noqa: RET504
 
     @property
-    def backend_info(self) -> Optional[BackendInfo]:
+    def backend_info(self) -> BackendInfo | None:
         return BackendInfo(
             type(self).__name__,
             None,
@@ -112,17 +113,16 @@ class _CirqBaseBackend(Backend):
         )
 
     @property
-    def characterisation(self) -> Optional[dict]:
+    def characterisation(self) -> dict | None:
         return None
 
     def default_compilation_pass(self, optimisation_level: int = 1) -> BasePass:
         assert optimisation_level in range(3)
         if optimisation_level == 0:
             return self._pass_0
-        elif optimisation_level == 1:
+        if optimisation_level == 1:
             return self._pass_1
-        else:
-            return self._pass_2
+        return self._pass_2
 
     @property
     def _result_id_type(self) -> _ResultIdTuple:
@@ -140,7 +140,7 @@ class _CirqSampleBackend(_CirqBaseBackend):
         super().__init__()
         self._supports_shots: bool = True
         self._supports_counts: bool = True
-        self._simulator: Union[Simulator, DensityMatrixSimulator, CliffordSimulator] = (
+        self._simulator: Simulator | DensityMatrixSimulator | CliffordSimulator = (
             Simulator()
         )
 
@@ -149,32 +149,29 @@ class _CirqSampleBackend(_CirqBaseBackend):
         bit_to_qubit_map = {b: q for q, b in circuit.qubit_to_bit_map.items()}
         if not cirq_circ.has_measurements():  # type: ignore
             return self.empty_result(circuit, n_shots=n_shots)
-        else:
-            run = self._simulator.run(cirq_circ, repetitions=n_shots)
-            run_dict = run.data.to_dict()
-            c_bits = [
-                bit
-                for key in run_dict.keys()
-                for bit in bit_to_qubit_map.keys()
-                if str(bit) == key
-            ]
-            individual_readouts = [
-                list(readout.values()) for readout in run_dict.values()
-            ]
-            shots = OutcomeArray.from_readouts(
-                [list(r) for r in zip(*individual_readouts)]
-            )
-            return BackendResult(shots=shots, c_bits=c_bits)
+        run = self._simulator.run(cirq_circ, repetitions=n_shots)
+        run_dict = run.data.to_dict()
+        c_bits = [
+            bit
+            for key in run_dict.keys()  # noqa: SIM118
+            for bit in bit_to_qubit_map
+            if str(bit) == key
+        ]
+        individual_readouts = [list(readout.values()) for readout in run_dict.values()]
+        shots = OutcomeArray.from_readouts(
+            [list(r) for r in zip(*individual_readouts, strict=False)]
+        )
+        return BackendResult(shots=shots, c_bits=c_bits)
 
     def process_circuits(
         self,
         circuits: Sequence[Circuit],
-        n_shots: Union[None, int, Sequence[Optional[int]]] = None,
+        n_shots: None | int | Sequence[int | None] = None,
         valid_check: bool = True,
         **kwargs: KwargTypes,
-    ) -> List[ResultHandle]:
+    ) -> list[ResultHandle]:
         circuits = list(circuits)
-        n_shots_list = Backend._get_n_shots_as_list(
+        n_shots_list = Backend._get_n_shots_as_list(  # noqa: SLF001
             n_shots,
             len(circuits),
             optional=False,
@@ -184,7 +181,9 @@ class _CirqSampleBackend(_CirqBaseBackend):
             self._check_all_circuits(circuits)
 
         handle_list = []
-        for i, (circuit, n_shots) in enumerate(zip(circuits, n_shots_list)):
+        for i, (circuit, n_shots) in enumerate(
+            zip(circuits, n_shots_list, strict=False)
+        ):  # noqa: PLR1704
             handle = ResultHandle(str(uuid4()), i)
             handle_list.append(handle)
             backres = self._run_circuit(circuit, n_shots=n_shots)
@@ -275,10 +274,10 @@ class _CirqSimBackend(_CirqBaseBackend):
     def process_circuits(
         self,
         circuits: Sequence[Circuit],
-        n_shots: Optional[Union[int, Sequence[int]]] = None,
+        n_shots: int | Sequence[int] | None = None,
         valid_check: bool = True,
         **kwargs: KwargTypes,
-    ) -> List[ResultHandle]:
+    ) -> list[ResultHandle]:
         if n_shots is not None:
             raise ValueError("`n_shots` argument is invalid for _CirqSimBackend")
 
@@ -297,7 +296,7 @@ class _CirqSimBackend(_CirqBaseBackend):
     @abstractmethod
     def package_results(
         self, circuit: CirqCircuit, q_bits: Sequence[Qubit]
-    ) -> List[BackendResult]:
+    ) -> list[BackendResult]:
         """
 
         :param circuit: The circuit to simulate.
@@ -309,7 +308,7 @@ class _CirqSimBackend(_CirqBaseBackend):
         """
         ...
 
-    def _run_circuit_moments(self, circuit: Circuit) -> List[BackendResult]:
+    def _run_circuit_moments(self, circuit: Circuit) -> list[BackendResult]:
         cirq_circ = tk_to_cirq(circuit, copy_all_qubits=True)
         _, q_bits = _get_default_uids(cirq_circ, circuit)
         return self.package_results(cirq_circ, q_bits)
@@ -334,7 +333,7 @@ class _CirqSimBackend(_CirqBaseBackend):
         circuits: Sequence[Circuit],
         valid_check: bool = True,
         **kwargs: KwargTypes,
-    ) -> List[ResultHandle]:
+    ) -> list[ResultHandle]:
         """
         Submit circuits to the backend for running. The results will be stored
         in the backend's result cache to be retrieved by the corresponding
@@ -385,7 +384,7 @@ class CirqStateSimBackend(_CirqSimBackend):
 
     def package_results(
         self, circuit: CirqCircuit, q_bits: Sequence[Qubit]
-    ) -> List[BackendResult]:
+    ) -> list[BackendResult]:
         moments = self._simulator.simulate_moment_steps(
             circuit,
             qubit_order=ops.QubitOrder.as_qubit_order(ops.QubitOrder.DEFAULT).order_for(
@@ -399,7 +398,7 @@ class CirqStateSimBackend(_CirqSimBackend):
             )
             for run in moments
         ]
-        return all_backres
+        return all_backres  # noqa: RET504
 
 
 class CirqDensityMatrixSimBackend(_CirqSimBackend):
@@ -422,7 +421,7 @@ class CirqDensityMatrixSimBackend(_CirqSimBackend):
 
     def package_results(
         self, circuit: CirqCircuit, q_bits: Sequence[Qubit]
-    ) -> List[BackendResult]:
+    ) -> list[BackendResult]:
         moments = self._simulator.simulate_moment_steps(circuit)
         all_backres = [
             BackendResult(
@@ -432,7 +431,7 @@ class CirqDensityMatrixSimBackend(_CirqSimBackend):
             for run in moments
         ]
 
-        return all_backres
+        return all_backres  # noqa: RET504
 
 
 class CirqCliffordSimBackend(_CirqSimBackend):
@@ -483,7 +482,7 @@ class CirqCliffordSimBackend(_CirqSimBackend):
 
     def package_results(
         self, circuit: CirqCircuit, q_bits: Sequence[Qubit]
-    ) -> List[BackendResult]:
+    ) -> list[BackendResult]:
         moments = self._simulator.simulate_moment_steps(
             circuit,
             qubit_order=ops.QubitOrder.as_qubit_order(ops.QubitOrder.DEFAULT).order_for(
@@ -492,12 +491,12 @@ class CirqCliffordSimBackend(_CirqSimBackend):
         )
         all_backres = [
             BackendResult(
-                state=cast(CliffordSimulatorStepResult, run).state.state_vector(),  # type: ignore
+                state=cast("CliffordSimulatorStepResult", run).state.state_vector(),  # type: ignore
                 q_bits=q_bits,
             )
             for run in moments
         ]
-        return all_backres
+        return all_backres  # noqa: RET504
 
 
 _cirq_squash = SquashCustom(

@@ -14,10 +14,10 @@
 """Backends for connecting to Cirq simulators directly from pytket"""
 
 from .cirq import (
-    CirqStateSampleBackend,
-    CirqStateSimBackend,
     CirqCliffordSampleBackend,
     CirqCliffordSimBackend,
     CirqDensityMatrixSampleBackend,
     CirqDensityMatrixSimBackend,
+    CirqStateSampleBackend,
+    CirqStateSimBackend,
 )

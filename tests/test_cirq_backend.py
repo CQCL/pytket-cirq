@@ -12,28 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from collections import Counter
-from typing import List
 import math
+from collections import Counter
 
-from hypothesis import given, strategies
 import numpy as np
 import pytest
 from _pytest.fixtures import FixtureRequest
 from cirq.contrib.noise_models import DepolarizingNoiseModel
+from hypothesis import given, strategies
 
+from pytket.backends import StatusEnum
+from pytket.circuit import Bit, Circuit, Qubit
 from pytket.extensions.cirq.backends.cirq import (
+    CirqCliffordSampleBackend,
+    CirqCliffordSimBackend,
     CirqDensityMatrixSampleBackend,
     CirqDensityMatrixSimBackend,
     CirqStateSampleBackend,
     CirqStateSimBackend,
-    CirqCliffordSampleBackend,
-    CirqCliffordSimBackend,
-    _CirqSimBackend,
     _CirqBaseBackend,
+    _CirqSimBackend,
 )
-from pytket.circuit import Circuit, Qubit, Bit
-from pytket.backends import StatusEnum
 from pytket.predicates import GateSetPredicate
 
 
@@ -60,7 +59,7 @@ def fixture_qubit_readout_circ(request: FixtureRequest) -> Circuit:
 
 
 def test_blank_wires() -> None:
-    backends: List[_CirqBaseBackend] = [
+    backends: list[_CirqBaseBackend] = [
         CirqDensityMatrixSimBackend(),
         CirqStateSimBackend(),
         CirqCliffordSimBackend(),
@@ -162,7 +161,7 @@ def test_default_pass(cirq_backend: _CirqBaseBackend, optimisation_level: int) -
     comp_pass.apply(c)
     for pred in b.required_predicates:
         if (
-            isinstance(
+            isinstance(  # noqa: UP038
                 cirq_backend, (CirqCliffordSimBackend, CirqCliffordSampleBackend)
             )
         ) and isinstance(pred, GateSetPredicate):
@@ -316,8 +315,8 @@ def test_noisy_simulator_backends() -> None:
     sim_backend = CirqDensityMatrixSimBackend(noise_model=nm)
     sample_backend = CirqDensityMatrixSampleBackend(noise_model=nm)
 
-    assert sim_backend._simulator.noise == nm
-    assert sample_backend._simulator.noise == nm
+    assert sim_backend._simulator.noise == nm  # noqa: SLF001
+    assert sample_backend._simulator.noise == nm  # noqa: SLF001
 
 
 @given(
@@ -391,4 +390,4 @@ def test_backend_info(cirq_backend: _CirqBaseBackend) -> None:
     b = cirq_backend
     assert b.backend_info is not None
     assert b.backend_info.name == b.__class__.__name__
-    assert b.backend_info.gate_set == b._gate_set_predicate.gate_set
+    assert b.backend_info.gate_set == b._gate_set_predicate.gate_set  # noqa: SLF001
