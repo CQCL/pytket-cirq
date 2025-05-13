@@ -1,4 +1,4 @@
-# Copyright Quantinuum
+# Copyright Quantinuum  # noqa: EXE002
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,17 +17,18 @@ Methods to allow conversion between Cirq and tket data types, including Circuits
 Devices
 """
 
-from typing import List, Dict, FrozenSet, cast, Any, Union, Type
 import cmath
-from logging import warning
 import re
-from cirq.devices import LineQubit, GridQubit
-import cirq.ops
-import cirq_google
-from sympy import pi, Basic, Symbol
+from logging import warning
+from typing import Any, cast
 
-from pytket.circuit import Circuit, OpType, Qubit, Bit, Node
+import cirq_google
+from sympy import Basic, Symbol, pi
+
+import cirq.ops
+from cirq.devices import GridQubit, LineQubit
 from pytket.architecture import Architecture
+from pytket.circuit import Bit, Circuit, Node, OpType, Qubit
 
 # For translating cirq circuits to tket circuits
 cirq_common = cirq.ops.common_gates
@@ -68,7 +69,7 @@ _cirq2ops_mapping = {
     cirq.ops.common_channels.ResetChannel: OpType.Reset,
 }
 # reverse mapping for convenience
-_ops2cirq_mapping: Dict = dict((item[1], item[0]) for item in _cirq2ops_mapping.items())
+_ops2cirq_mapping: dict = dict((item[1], item[0]) for item in _cirq2ops_mapping.items())  # noqa: C402
 # spot special rotation gates
 _constant_gates = (
     cirq_common.CNOT,
@@ -98,7 +99,7 @@ _cirq2ops_radians_mapping = {
 }
 
 
-def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:
+def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:  # noqa: PLR0912, PLR0915
     """Converts a Cirq :py:class:`Circuit` to a tket :py:class:`Circuit` object.
 
     :param circuit: The input Cirq :py:class:`Circuit`
@@ -133,22 +134,22 @@ def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:
                 gate = cirq_common.H
             elif (
                 gatetype == cirq_common.CNotPowGate
-                and cast(cirq_common.CNotPowGate, gate).exponent == 1
+                and cast("cirq_common.CNotPowGate", gate).exponent == 1
             ):
                 gate = cirq_common.CNOT
             elif (
-                gatetype == cirq_pauli._PauliX
-                and cast(cirq_pauli._PauliX, gate).exponent == 1
+                gatetype == cirq_pauli._PauliX  # noqa: SLF001
+                and cast("cirq_pauli._PauliX", gate).exponent == 1  # noqa: SLF001
             ):
                 gate = cirq_pauli.X
             elif (
-                gatetype == cirq_pauli._PauliY
-                and cast(cirq_pauli._PauliY, gate).exponent == 1
+                gatetype == cirq_pauli._PauliY  # noqa: SLF001
+                and cast("cirq_pauli._PauliY", gate).exponent == 1  # noqa: SLF001
             ):
                 gate = cirq_pauli.Y
             elif (
-                gatetype == cirq_pauli._PauliZ
-                and cast(cirq_pauli._PauliZ, gate).exponent == 1
+                gatetype == cirq_pauli._PauliZ  # noqa: SLF001
+                and cast("cirq_pauli._PauliZ", gate).exponent == 1  # noqa: SLF001
             ):
                 gate = cirq_pauli.Z
 
@@ -169,20 +170,20 @@ def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:
                     raise NotImplementedError(
                         "Operation not supported by tket: " + str(op.gate)
                     ) from error
-                params: List[Union[float, Basic, Symbol]] = []
+                params: list[float | Basic | Symbol] = []
             elif isinstance(gate, cirq.ops.common_channels.ResetChannel):
                 optype = OpType.Reset
                 params = []
             elif gatetype in _radian_gates:
                 try:
                     optype = _cirq2ops_radians_mapping[
-                        cast(Type[cirq.ops.EigenGate], gatetype)
+                        cast("type[cirq.ops.EigenGate]", gatetype)
                     ]
                 except KeyError as error:
                     raise NotImplementedError(
                         "Operation not supported by tket: " + str(op.gate)
                     ) from error
-                params = [gate._rads / pi]  # type: ignore
+                params = [gate._rads / pi]  # type: ignore  # noqa: SLF001
             elif isinstance(gate, cirq_common.MeasurementGate):
                 # Adding "_b" to the bit uid since for cirq.NamedQubit,
                 # the gate.key is equal to the qubit id (the qubit name)
@@ -204,7 +205,7 @@ def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:
             else:
                 try:
                     optype = _cirq2ops_mapping[gatetype]
-                    params = [cast(Any, gate).exponent]
+                    params = [cast("Any", gate).exponent]
                 except (KeyError, AttributeError) as error:
                     raise NotImplementedError(
                         "Operation not supported by tket: " + str(op.gate)
@@ -217,7 +218,7 @@ def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:
     return tkcirc
 
 
-def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.Circuit:
+def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.Circuit:  # noqa: PLR0912, PLR0915
     """Converts a tket :py:class:`Circuit` object to a Cirq :py:class:`Circuit`.
 
     :param tkcirc: The input tket :py:class:`Circuit`
@@ -229,26 +230,26 @@ def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.
         for q in tkcirc.qubits:
             tkcirc.add_gate(OpType.noop, [q])
 
-    qmap: Dict[Qubit, Union[cirq.ops.NamedQubit, LineQubit, GridQubit]] = {}
+    qmap: dict[Qubit, cirq.ops.NamedQubit | LineQubit | GridQubit] = {}
     line_name = None
     grid_name = None
     # Since Cirq can only support registers of up to 2 dimensions, we explicitly
     # check for 3-dimensional registers whose third dimension is trivial.
     # SquareGrid architectures are of this form.
     indices = [qb.index for qb in tkcirc.qubits]
-    is_flat_3d = all(idx[2] == 0 for idx in indices if len(idx) == 3)
+    is_flat_3d = all(idx[2] == 0 for idx in indices if len(idx) == 3)  # noqa: PLR2004
     for qb in tkcirc.qubits:
         if len(qb.index) == 0:
             qmap.update({qb: cirq.ops.NamedQubit(qb.reg_name)})
         elif len(qb.index) == 1:
-            if line_name != None and line_name != qb.reg_name:
+            if line_name != None and line_name != qb.reg_name:  # noqa: E711, PLR1714
                 raise NotImplementedError(
                     "Cirq can only support a single linear register"
                 )
             line_name = qb.reg_name
             qmap.update({qb: LineQubit(qb.index[0])})
-        elif len(qb.index) == 2 or (len(qb.index) == 3 and is_flat_3d):
-            if grid_name != None and grid_name != qb.reg_name:
+        elif len(qb.index) == 2 or (len(qb.index) == 3 and is_flat_3d):  # noqa: PLR2004
+            if grid_name != None and grid_name != qb.reg_name:  # noqa: E711, PLR1714
                 raise NotImplementedError(
                     "Cirq can only support a single grid register"
                 )
@@ -269,7 +270,7 @@ def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.
                 "Cannot convert tket Op to Cirq gate: " + op.get_name()
             ) from error
         if optype == OpType.Measure:
-            qid = qmap[cast(Qubit, command.args[0])]
+            qid = qmap[cast("Qubit", command.args[0])]
             bit = command.args[1]
             # Removing the "_b" added to measurement bit registers uids,
             # for dealing with NamedQubits
@@ -278,10 +279,10 @@ def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.
                 bit_repr = bit_repr[0:-2]
             cirqop = cirq.ops.measure(qid, key=bit_repr)
         elif optype == OpType.Reset:
-            qid = qmap[cast(Qubit, command.args[0])]
+            qid = qmap[cast("Qubit", command.args[0])]
             cirqop = cirq.ops.ResetChannel().on(qid)
         else:
-            qids = [qmap[cast(Qubit, qbit)] for qbit in command.args]
+            qids = [qmap[cast("Qubit", qbit)] for qbit in command.args]
             params = op.params
             if len(params) == 0:
                 cirqop = gatetype(*qids)
@@ -298,14 +299,16 @@ def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.
         oplst.append(cirqop)
     try:
         coeff = cmath.exp(float(tkcirc.phase) * cmath.pi * 1j)
-        if coeff.real < 1e-8:  # tolerance permitted by cirq for GlobalPhaseGate
+        if (
+            coeff.real < 1e-8  # noqa: PLR2004
+        ):  # tolerance permitted by cirq for GlobalPhaseGate
             coeff = coeff.imag * 1j
-        if coeff.imag < 1e-8:
+        if coeff.imag < 1e-8:  # noqa: PLR2004
             coeff = coeff.real
         if coeff != 1.0:
             oplst.append(cirq.ops.global_phase_operation(coeff))
     except ValueError:
-        warning(
+        warning(  # noqa: LOG015
             "Global phase is dependent on a symbolic parameter, so cannot adjust for "
             "phase"
         )
@@ -315,7 +318,7 @@ def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.
 # For converting cirq devices to tket devices
 
 
-def _sort_row_col(qubits: FrozenSet[GridQubit]) -> List[GridQubit]:
+def _sort_row_col(qubits: frozenset[GridQubit]) -> list[GridQubit]:
     """Sort grid qubits first by row then by column"""
 
     return sorted(qubits, key=lambda x: (x.row, x.col))
@@ -332,7 +335,7 @@ def process_characterisation(
     :return: A dictionary containing device characteristics
     """
     data = device.metadata
-    qubits: FrozenSet[GridQubit] = data.qubit_set
+    qubits: frozenset[GridQubit] = data.qubit_set
     qubit_graph = data.nx_graph
 
     qb_map = {q: Node("q", q.row, q.col) for q in qubits}
@@ -341,10 +344,10 @@ def process_characterisation(
     coupling_map = []
     for qb in indexed_qubits:
         for x in qubit_graph.neighbors(qb):
-            coupling_map.append((qb_map[qb], qb_map[x]))
+            coupling_map.append((qb_map[qb], qb_map[x]))  # noqa: PERF401
     arc = Architecture(coupling_map)
 
-    characterisation = dict()
+    characterisation = dict()  # noqa: C408
     characterisation["Architecture"] = arc
 
     return characterisation
