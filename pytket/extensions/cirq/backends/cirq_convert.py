@@ -300,8 +300,8 @@ def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.
     try:
         coeff = cmath.exp(float(tkcirc.phase) * cmath.pi * 1j)
         if (
-            coeff.real < 1e-8
-        ):  # tolerance permitted by cirq for GlobalPhaseGate  # noqa: PLR2004
+            coeff.real < 1e-8  # noqa: PLR2004
+        ):  # tolerance permitted by cirq for GlobalPhaseGate
             coeff = coeff.imag * 1j
         if coeff.imag < 1e-8:  # noqa: PLR2004
             coeff = coeff.real

@@ -181,9 +181,9 @@ class _CirqSampleBackend(_CirqBaseBackend):
             self._check_all_circuits(circuits)
 
         handle_list = []
-        for i, (circuit, n_shots) in enumerate(
+        for i, (circuit, n_shots) in enumerate(  # noqa: PLR1704
             zip(circuits, n_shots_list, strict=False)
-        ):  # noqa: PLR1704
+        ):
             handle = ResultHandle(str(uuid4()), i)
             handle_list.append(handle)
             backres = self._run_circuit(circuit, n_shots=n_shots)
