@@ -17,6 +17,8 @@ from collections.abc import Sequence
 from typing import cast
 from uuid import uuid4
 
+# Base cirq needed for sphinx to resolve type annotations
+import cirq  # noqa: F401
 from cirq import ops
 from cirq.circuits import Circuit as CirqCircuit
 from cirq.devices import NOISE_MODEL_LIKE
@@ -256,13 +258,9 @@ class _CirqSimBackend(_CirqBaseBackend):
         self, circuit: CirqCircuit, q_bits: Sequence[Qubit]
     ) -> BackendResult:
         """
-
-        :param circuit: The circuit to simulate.
-        :type circuit: CirqCircuit
+        :param circuit: The cirq circuit to simulate.
         :param q_bits: ordered pytket Qubit
-        :type q_bits: Sequence[Qubit]
         :return: result of simulation
-        :rtype: BackendResult
         """
         ...
 
@@ -299,12 +297,9 @@ class _CirqSimBackend(_CirqBaseBackend):
     ) -> list[BackendResult]:
         """
 
-        :param circuit: The circuit to simulate.
-        :type circuit: CirqCircuit
+        :param circuit: The cirq circuit to simulate.
         :param q_bits: ordered pytket Qubit
-        :type q_bits: Sequence[Qubit]
         :return: sequence of moments from simulator
-        :rtype: List[BackendResult]
         """
         ...
 
@@ -320,8 +315,16 @@ class _CirqSimBackend(_CirqBaseBackend):
         **kwargs: KwargTypes,
     ) -> ResultHandle:
         """
-        Submit a single circuit to the backend for running. See
-        :py:meth:`_CirqSimBackend.process_circuits_moments`.
+        Submit a circuit to the backend for running. The results will be stored
+        in the backend's result cache to be retrieved by the corresponding
+        get_<data> method. The get_<data> method will return List[BackendResult]
+        corresponding to each moment.
+
+        :param circuit: Circuit to process on the backend.
+        :param valid_check: Explicitly check that all circuits satisfy all required
+            predicates to run on the backend. Defaults to True
+        :return: Handles to results for each input circuit, as an interable in
+            the same order as the circuits.
         """
 
         return self.process_circuits_moments(
@@ -341,13 +344,10 @@ class _CirqSimBackend(_CirqBaseBackend):
         corresponding to each moment.
 
         :param circuits: Circuits to process on the backend.
-        :type circuits: Iterable[Circuit]
         :param valid_check: Explicitly check that all circuits satisfy all required
             predicates to run on the backend. Defaults to True
-        :type valid_check: bool, optional
         :return: Handles to results for each input circuit, as an interable in
             the same order as the circuits.
-        :rtype: List[ResultHandle]
         """
 
         if valid_check:
