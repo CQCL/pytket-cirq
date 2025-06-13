@@ -12,11 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Methods to allow conversion between Cirq and tket data types, including Circuits and
-Devices
-"""
-
 import cmath
 import re
 from logging import warning
@@ -100,14 +95,14 @@ _cirq2ops_radians_mapping = {
 
 
 def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:  # noqa: PLR0912, PLR0915
-    """Converts a Cirq :py:class:`cirq.Circuit` to a tket :py:class:`pytket._tket.circuit.Circuit` object.
+    """Converts a Cirq :py:class:`cirq.Circuit` to a tket :py:class:`~.pytket._tket.circuit.Circuit` object.
 
     :param circuit: The input Cirq :py:class:`cirq.Circuit`
 
     :raises NotImplementedError: If the input contains a Cirq :py:class:`cirq.Circuit`
         operation which is not yet supported by pytket
 
-    :return: The tket :py:class:`pytket._tket.circuit.Circuit` corresponding to the input circuit
+    :return: The tket :py:class:`~.pytket._tket.circuit.Circuit` corresponding to the input circuit
     """
     tkcirc = Circuit()
     qmap = {}
@@ -219,9 +214,9 @@ def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:  # noqa: PLR0912, PLR
 
 
 def tk_to_cirq(tkcirc: Circuit, copy_all_qubits: bool = False) -> cirq.circuits.Circuit:  # noqa: PLR0912, PLR0915
-    """Converts a tket :py:class:`pytket._tket.circuit.Circuit` object to a Cirq :py:class:`cirq.Circuit`.
+    """Converts a tket :py:class:`~.pytket._tket.circuit.Circuit` object to a Cirq :py:class:`cirq.Circuit`.
 
-    :param tkcirc: The input tket :py:class:`pytket._tket.circuit.Circuit`
+    :param tkcirc: The input tket :py:class:`~.pytket._tket.circuit.Circuit`
 
     :return: The Cirq :py:class:`cirq.Circuit` corresponding to the input circuit
     """
