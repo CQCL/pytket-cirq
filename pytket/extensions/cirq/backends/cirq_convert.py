@@ -21,6 +21,7 @@ import cirq_google
 from sympy import Basic, Symbol, pi
 
 import cirq.ops
+from cirq import Qid
 from cirq.devices import GridQubit, LineQubit
 from pytket.architecture import Architecture
 from pytket.circuit import Bit, Circuit, Node, OpType, Qubit
@@ -105,7 +106,7 @@ def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:  # noqa: PLR0912, PLR
     :return: The tket :py:class:`~.pytket._tket.circuit.Circuit` corresponding to the input circuit
     """
     tkcirc = Circuit()
-    qmap = {}
+    qmap: dict[Qid, Qubit] = {}
     for qb in circuit.all_qubits():
         if isinstance(qb, LineQubit):
             uid = Qubit("q", qb.x)
