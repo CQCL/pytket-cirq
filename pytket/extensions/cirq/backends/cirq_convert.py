@@ -21,7 +21,6 @@ import cirq_google
 from sympy import Basic, Symbol, pi
 
 import cirq.ops
-from cirq import Qid
 from cirq.devices import GridQubit, LineQubit
 from pytket.architecture import Architecture
 from pytket.circuit import Bit, Circuit, Node, OpType, Qubit
