@@ -106,7 +106,7 @@ def cirq_to_tk(circuit: cirq.circuits.Circuit) -> Circuit:  # noqa: PLR0912, PLR
     :return: The tket :py:class:`~.pytket._tket.circuit.Circuit` corresponding to the input circuit
     """
     tkcirc = Circuit()
-    qmap: dict[Qid, Qubit] = {}
+    qmap: dict[cirq.ops.Qid, Qubit] = {}
     for qb in circuit.all_qubits():
         if isinstance(qb, LineQubit):
             uid = Qubit("q", qb.x)
