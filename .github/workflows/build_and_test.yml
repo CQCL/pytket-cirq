@@ -30,12 +30,12 @@ jobs:
         fetch-depth: '0'
         submodules: recursive
     - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* +refs/heads/*:refs/remotes/origin/*
-    - name: Set up Python 3.10
+    - name: Set up Python 3.11
       if: github.event_name == 'push' || github.event_name == 'schedule'
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
-    - name: Build and test (3.10)
+        python-version: '3.11'
+    - name: Build and test (3.11)
       if: github.event_name == 'push' || github.event_name == 'schedule'
       shell: bash
       run: |

@@ -31,7 +31,7 @@ setup(
     version=metadata["__extension_version__"],
     author="TKET development team",
     author_email="tket-support@quantinuum.com",
-    python_requires=">=3.10",
+    python_requires=">=3.11",
     project_urls={
         "Documentation": "https://tket.quantinuum.com/extensions/pytket-cirq/index.html",
         "Source": "https://github.com/CQCL/pytket-cirq",
@@ -51,7 +51,6 @@ setup(
     ],
     classifiers=[
         "Environment :: Console",
-        "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",

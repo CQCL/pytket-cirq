@@ -7,8 +7,8 @@ quantum circuits and running them on simulators and physical quantum devices.
 ``pytket-cirq`` is an extension to ``pytket`` that allows conversion to and from
 Cirq representations.
 
-``pytket-cirq`` is available for Python 3.10, 3.11, 3.12 and 3.13, on Linux,
-MacOS and Windows. To install, run:
+``pytket-cirq`` is available for Python 3.11, 3.12 and 3.13, on Linux, MacOS and
+Windows. To install, run:
 
 ::
 
