@@ -14,8 +14,8 @@ Some useful links:
 
 ## Getting started
 
-`pytket-cirq` is available for Python 3.10, 3.11, 3.12 and 3.13, on Linux, MacOS
-and Windows. To install, run:
+`pytket-cirq` is available for Python 3.11, 3.12 and 3.13, on Linux, MacOS and
+Windows. To install, run:
 
 ```shell
 pip install pytket-cirq
