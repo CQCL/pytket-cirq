@@ -3,6 +3,13 @@
 Changelog
 ~~~~~~~~~
 
+Unreleased
+----------
+
+* Update pytket minimium version requirement to 2.8.0.
+* Update cirq-core and cirq-google minimium version requirement to 1.6.0.
+* Remove Python 3.10 support.
+
 0.41.0 (April 2025)
 -------------------
 
