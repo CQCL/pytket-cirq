@@ -149,7 +149,7 @@ class _CirqSampleBackend(_CirqBaseBackend):
     def _run_circuit(self, circuit: Circuit, n_shots: int) -> BackendResult:
         cirq_circ = tk_to_cirq(circuit)
         bit_to_qubit_map = {b: q for q, b in circuit.qubit_to_bit_map.items()}
-        if not cirq_circ.has_measurements():  # type: ignore
+        if not cirq_circ.has_measurements():
             return self.empty_result(circuit, n_shots=n_shots)
         run = self._simulator.run(cirq_circ, repetitions=n_shots)
         run_dict = run.data.to_dict()
