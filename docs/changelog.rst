@@ -3,8 +3,8 @@
 Changelog
 ~~~~~~~~~
 
-Unreleased
-----------
+0.42.0 (July 2025)
+------------------
 
 * Update pytket minimium version requirement to 2.8.0.
 * Update cirq-core and cirq-google minimium version requirement to 1.6.0.
